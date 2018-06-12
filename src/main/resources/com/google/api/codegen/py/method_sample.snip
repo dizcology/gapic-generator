@@ -8,16 +8,15 @@
       @end
 @end
 
-# Region tag for callable sample
-@snippet regionTag(apiMethod, sample)
-  {@apiMethod.apiModuleName}_{@sample.valueSet.title}
-@end
-
-# Generate code samples for standalone samples.
-@snippet sampleCode(apiMethod, initCode, sample)
-    def {@sample.valueSet.title}({@callArgList(sample.valueSet)})
-        @join line : util.getDocLines(sampleCode_(apiMethod, initCode))
-            {@line}
+@snippet incodeSamples(apiMethod)
+    @join sample : apiMethod.samples on BREAK.add(BREAK).add(BREAK).add("# Alternatively:").add(BREAK)
+      @let firstSample = apiMethod.samples.get(0)
+        # Print the set-up code for the first sample, and for
+        # subsequent samples where the code differs from the first
+        @if or(and(sample.callingForm == firstSample.callingForm, \
+                    sample.valueSet.id == firstSample.valueSet.id), \
+               sampleSetupDiffers(firstSample, sample))
+          {@incodeSampleSetup(apiMethod, sample)}
         @end
 
         {@incodeSampleCall(apiMethod, sample)}
@@ -25,20 +24,13 @@
     @end
 @end
 
-@snippet callArgList(valueSet)
-  @join parameter : valueSet.parameters
-    {@parameter}
+# This function returns true iff @incodeSampleSetup() would produce
+# different code for firstSample and secondSample.
+@snippet sampleSetupDiffers(firstSample, secondSample) horizontal
+  @if or(secondSample.initCode.importSection.appImports != firstSample.initCode.importSection.appImports, \
+         secondSample.initCode.lines != firstSample.initCode.lines)
+    sampleSetupDiffers: true
   @end
-@end
-
-@snippet sampleCode(apiMethod, initCode)
-      @join line : util.getDocLines(sampleCode_(apiMethod, initCode))
-          {@line}
-      @end
-@end
-
-@snippet sampleCode_(apiMethod)
-  {@sampleCode_(apiMethod, apiMethod.initCode)}
 @end
 
 @snippet incodeSampleSetup(apiMethod, sample)

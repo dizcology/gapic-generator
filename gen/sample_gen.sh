@@ -13,7 +13,7 @@ TEMP_CLIENT=$TEMP/client
 # This should point to the location of the target client library.
 DESTINATION=$BASE/dpe-github/google-cloud-python/language
 
-LANGUAGE_CONFIG=$GAPIC_GENERATOR_DIR/src/main/resources/com/google/api/codegen/py/python_gapic.yaml
+LANGUAGE=python
 
 SERVICE_CONFIG=$GOOGLEAPIS_DIR/google/cloud/language/language_v1.yaml
 # TODO: if these are unique to service config, discover them automatically
@@ -55,13 +55,16 @@ then
     # echo $PACKAGING_CONFIG
     rm -rf $TEMP_CLIENT
 
-    cd $GAPIC_GENERATOR_DIR && java -cp build/libs/gapic-generator-*-fatjar.jar com.google.api.codegen.CodeGeneratorTool \
-        --descriptor_set=$DESCRIPTOR \
-        --service_yaml=$SERVICE_CONFIG \
-        --gapic_yaml=$CLIENT_CONFIG \
-        --gapic_yaml=$LANGUAGE_CONFIG \
-        --package_yaml2=$PACKAGING_CONFIG \
-        --o=$TEMP_CLIENT
+    cd $GAPIC_GENERATOR_DIR && ./gradlew runCodeGen \
+        "-Pclargs=--descriptor_set=$DESCRIPTOR,--service_yaml=$SERVICE_CONFIG,--gapic_yaml=$CLIENT_CONFIG,--language=$LANGUAGE,--package_yaml2=$PACKAGING_CONFIG,--o=$TEMP_CLIENT"
+
+    # cd $GAPIC_GENERATOR_DIR && java -cp build/libs/gapic-generator-0.*-fatjar.jar com.google.api.codegen.GeneratorMain \
+    #     --descriptor_set=$DESCRIPTOR \
+    #     --service_yaml=$SERVICE_CONFIG \
+    #     --gapic_yaml=$CLIENT_CONFIG \
+    #     --gapic_yaml=$LANGUAGE_CONFIG \
+    #     --package_yaml2=$PACKAGING_CONFIG \
+    #     --o=$TEMP_CLIENT
 
     rm -rf $DESTINATION/samples
     cp -r $TEMP_CLIENT/samples $DESTINATION

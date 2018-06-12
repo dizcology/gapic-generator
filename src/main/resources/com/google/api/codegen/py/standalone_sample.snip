@@ -12,6 +12,8 @@
    
   @# [START full_sample]
 
+  @# FIXME: Insert here boilerplate code not directly related to the method call itself.
+
   @let apiMethod = sampleFile.libraryMethod
     @let sample = apiMethod.samples.get(0)
       @##     calling form "{@sample.callingForm.toString}"
@@ -20,20 +22,20 @@
       @##       {@sample.valueSet.parameters}
       @##     apiMethod "{@apiMethod.name}" of type "{@apiMethod.type}"
       
-      @# [START {@regionTag(apiMethod, sample)}]
+      @# [START core_sample]
 
-      {@sampleCode(apiMethod, sample.initCode, sample)}
+      @# FIXME: Insert here code to prepare the request fields, make the call, process the response.
 
       {@sample.valueSet}
-
-      {@sample.initCode}
-
+       
+      {@standaloneSample(apiMethod, sample)}
       # TODO(pongad): Make this work on non-unary too.
       print(response)
       
-      @# [END {@regionTag(apiMethod, sample)}]
+      @# [END core_sample]
 
       @# FIXME: Insert here clean-up code.
+      }
       
     @end
   @end
