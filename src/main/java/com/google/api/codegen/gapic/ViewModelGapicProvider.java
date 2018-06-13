@@ -14,7 +14,8 @@
  */
 package com.google.api.codegen.gapic;
 
-import com.google.api.codegen.GeneratedResult;
+import com.google.api.codegen.common.CodeGenerator;
+import com.google.api.codegen.common.GeneratedResult;
 import com.google.api.codegen.config.GapicProductConfig;
 import com.google.api.codegen.config.ProtoApiModel;
 import com.google.api.codegen.rendering.CommonSnippetSetRunner;
@@ -28,17 +29,18 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
-public class ViewModelGapicProvider implements GapicProvider<Doc> {
+/* CodeGenerator for proto-based GAPIC libraries that uses ViewModels to render the templates. */
+public class ViewModelGapicProvider implements CodeGenerator<Doc> {
   private final Model model;
   private final GapicProductConfig productConfig;
   private final CommonSnippetSetRunner snippetSetRunner;
-  private final ModelToViewTransformer modelToViewTransformer;
+  private final ModelToViewTransformer<ProtoApiModel> modelToViewTransformer;
 
   private ViewModelGapicProvider(
       Model model,
       GapicProductConfig productConfig,
       CommonSnippetSetRunner snippetSetRunner,
-      ModelToViewTransformer modelToViewTransformer) {
+      ModelToViewTransformer<ProtoApiModel> modelToViewTransformer) {
     this.model = model;
     this.productConfig = productConfig;
     this.snippetSetRunner = snippetSetRunner;
@@ -80,7 +82,7 @@ public class ViewModelGapicProvider implements GapicProvider<Doc> {
     private Model model;
     private GapicProductConfig productConfig;
     private CommonSnippetSetRunner snippetSetRunner;
-    private ModelToViewTransformer modelToViewTransformer;
+    private ModelToViewTransformer<ProtoApiModel> modelToViewTransformer;
 
     private Builder() {}
 
@@ -99,7 +101,8 @@ public class ViewModelGapicProvider implements GapicProvider<Doc> {
       return this;
     }
 
-    public Builder setModelToViewTransformer(ModelToViewTransformer modelToViewTransformer) {
+    public Builder setModelToViewTransformer(
+        ModelToViewTransformer<ProtoApiModel> modelToViewTransformer) {
       this.modelToViewTransformer = modelToViewTransformer;
       return this;
     }
